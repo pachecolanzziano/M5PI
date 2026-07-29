@@ -13,11 +13,11 @@ def cargarDatos():
     
     # 4. Leemos los datos y los imprimimos
     df = pd.read_excel(ruta_excel)
-    print(df)
     return df
 
 if __name__ == "__main__":
     # Carga los datos y muestra las primeras filas
     datos = cargarDatos()
-    print(datos.head())
+    # print(datos.head())
     print(datos.columns)
+    # print(datos)
