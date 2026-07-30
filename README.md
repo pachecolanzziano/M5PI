@@ -204,18 +204,56 @@ El dashboard incluye:
 
 ---
 
-## 🚀 Cómo Ejecutar el Proyecto
+# 🔍 Guía de Revisión del Proyecto MLOps
 
-### 1. Clonar el Repositorio
+## 📌 Instrucciones para revisar el proyecto
+
+Esta guía te permitirá ejecutar y probar el proyecto tanto localmente como con Docker. Sigue los pasos en orden para una revisión completa.
+
+---
+
+## 🚀 PARTE 1: REVISIÓN LOCAL (SIN DOCKER)
+
+### 1. Clonar el repositorio
 
 ```bash
-git clone <https://github.com/pachecolanzziano/M5PI.git>
-cd mlops_pipeline
+git clone https://github.com/pachecolanzziano/M5PI.git
+cd M5PI
 
-#crear un entornor virtual
-venv\Scripts\activate     # Windows
+# Crear entorno virtual
+python -m venv venv
+
+# Activar (Windows)
+venv\Scripts\activate
+
+# Activar (Mac/Linux)
+source venv/bin/activate
+
+# Instalar dependencias
 pip install -r requirements.txt
+
+#Ejecutar el pipeline de datos
 cd src
 python ft_engineering.py
+
+# Entrenar y evaluar modelos
 python model_training_evaluation.py
-uvicorn model_deploy:app --host 0.0.0.0 --port 8000 //arreglar esto
+
+# Ejecutar la API localment -> abrir enun navegador: http://localhost:8000/docs
+python model_deploy.py
+
+# Ejecutar el dashboard de monitoreo
+streamlit run model_monitoring.py
+# Probar dashboard: Abrir en navegador: http://localhost:8501
+
+## REVISIÓN CON DOCKER
+# Navegar a la raíz del proyecto
+cd ..  # Si estás en src/
+docker build -t modelo-pago .
+
+# Ejecutar el contenedor
+docker run -p 8000:8000 modelo-pago
+# Abrir en navegador: http://localhost:8000/docs
+#en este endponit podemos probrar la api desde el navegador
+# http://localhost:8000/predict
+

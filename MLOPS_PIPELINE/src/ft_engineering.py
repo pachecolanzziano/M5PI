@@ -3,6 +3,7 @@
 import pandas as pd
 import numpy as np
 import joblib
+import cloudpickle
 import pickle
 import os
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
@@ -147,13 +148,15 @@ print(f"  - X_train: {X_train_transformed.shape}")
 print(f"  - X_test: {X_test_transformed.shape}")
 
 # ============================================
-# 9. GUARDAR PREPROCESADOR
+# 9. GUARDAR PREPROCESADOR (con cloudpickle)
 # ============================================
 
 os.makedirs("../models", exist_ok=True)
 
-joblib.dump(preprocessor, "../models/preprocessor.pkl")
-print("✅ preprocessor.pkl guardado")
+# Guardar usando cloudpickle (permite serializar funciones correctamente)
+with open("../models/preprocessor.pkl", "wb") as f:
+    cloudpickle.dump(preprocessor, f)
+print("✅ preprocessor.pkl guardado (con cloudpickle)")
 
 # ============================================
 # 10. GUARDAR DATOS TRANSFORMADOS
