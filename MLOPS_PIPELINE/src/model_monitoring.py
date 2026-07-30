@@ -25,10 +25,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# ============================================
-# ⚠️ FUNCIÓN NECESARIA PARA CARGAR EL PREPROCESADOR
-# ============================================
-
 def convertir_a_string(X):
     """Convierte todas las columnas a tipo string"""
     return X.astype(str)
@@ -312,7 +308,8 @@ st.sidebar.info(
     "**Avance #3**\n\n"
     "Aplicación para monitorear el modelo y detectar Data Drift.\n\n"
     "**Modelo:** Gradient Boosting\n"
-    "**Objetivo:** Predecir Pago_atiempo"
+    "**Objetivo:** Predecir Pago_atiempo\n"
+    "**Autor:** Luis Carlos Pacheco Lanzziano"
 )
 
 # ============================================
