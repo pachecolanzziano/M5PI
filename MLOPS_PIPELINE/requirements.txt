@@ -1,15 +1,25 @@
-pandas
-numpy
-openpyxl
-python-dotenv
-db-dtypes
-jupyter
-notebook
-ipykernel
-seaborn
-ipywidgets
-scikit-learn
-xgboost
-pydantic
-fastapi
-uvicorn[standard]
+# === CORE ===
+pandas>=2.0.0
+numpy>=1.24.0
+scikit-learn==1.4.2
+joblib>=1.2.0
+openpyxl>=3.1.0
+cloudpickle>=2.0.0
+
+# === API (Avance #4) ===
+fastapi>=0.100.0
+uvicorn[standard]>=0.23.0
+pydantic>=2.0.0
+
+# === VISUALIZACIÓN Y MONITOREO (Avance #3) ===
+streamlit>=1.28.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+plotly>=5.17.0
+scipy>=1.10.0
+
+# === NOTEBOOKS (Avance #1) ===
+jupyter>=1.0.0
+notebook>=6.5.0
+ipykernel>=6.0.0
+ipywidgets>=8.0.0

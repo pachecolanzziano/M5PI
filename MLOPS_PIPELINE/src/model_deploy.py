@@ -3,12 +3,13 @@
 import pandas as pd
 import numpy as np
 import joblib
+import cloudpickle
 import uvicorn
+import os
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
-import os
-from ft_engineering import convertir_a_string
+from typing import List
+
 # ============================================
 # 1. INICIALIZACIÓN DE LA APLICACIÓN
 # ============================================
@@ -20,21 +21,39 @@ app = FastAPI(
 )
 
 # ============================================
-# 3. CARGAR MODELO Y PREPROCESADOR
+# 2. FUNCIÓN AUXILIAR (necesaria para cargar el preprocesador)
 # ============================================
 
-# Rutas de los archivos
-MODEL_PATH = "../models/best_model.pkl"
-PREPROCESSOR_PATH = "../models/preprocessor.pkl"
+def convertir_a_string(X):
+    """Convierte todas las columnas a tipo string"""
+    return X.astype(str)
+
+
+# ============================================
+# 3. CARGAR MODELO Y PREPROCESADOR CON RUTAS DINÁMICAS
+# ============================================
+
+# Obtener la ruta del directorio donde está model_deploy.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Construir rutas dinámicamente (sube un nivel a la raíz del proyecto)
+MODEL_PATH = os.path.normpath(os.path.join(BASE_DIR, "..", "models", "best_model.pkl"))
+PREPROCESSOR_PATH = os.path.normpath(os.path.join(BASE_DIR, "..", "models", "preprocessor.pkl"))
+
+print(f"📂 Buscando modelo en: {MODEL_PATH}")
+print(f"📂 Buscando preprocesador en: {PREPROCESSOR_PATH}")
 
 # Variables globales
 modelo = None
 preprocessor = None
 
+# ============================================
+# 3.1 CARGAR MODELO (con joblib)
+# ============================================
+
 try:
-    # Cargar el modelo
     modelo = joblib.load(MODEL_PATH)
-    print("✅ Modelo cargado exitosamente desde:", MODEL_PATH)
+    print("✅ Modelo cargado exitosamente")
 except FileNotFoundError:
     print(f"❌ Error: No se encuentra el modelo en {MODEL_PATH}")
     modelo = None
@@ -42,10 +61,14 @@ except Exception as e:
     print(f"❌ Error al cargar el modelo: {e}")
     modelo = None
 
+# ============================================
+# 3.2 CARGAR PREPROCESADOR (con cloudpickle)
+# ============================================
+
 try:
-    # Cargar el preprocesador
-    preprocessor = joblib.load(PREPROCESSOR_PATH)
-    print("✅ Preprocesador cargado exitosamente desde:", PREPROCESSOR_PATH)
+    with open(PREPROCESSOR_PATH, "rb") as f:
+        preprocessor = cloudpickle.load(f)
+    print("✅ Preprocesador cargado exitosamente")
 except FileNotFoundError:
     print(f"❌ Error: No se encuentra el preprocesador en {PREPROCESSOR_PATH}")
     preprocessor = None
@@ -166,17 +189,6 @@ def health_check():
 def predict(cliente: ClienteInput):
     """
     Realiza una predicción para un cliente individual.
-    
-    - **capital_prestado**: Monto del préstamo solicitado
-    - **plazo_meses**: Plazo del préstamo en meses
-    - **edad_cliente**: Edad del cliente
-    - **salario_cliente**: Ingresos del cliente
-    - **total_otros_prestamos**: Total de otras deudas
-    - **cuota_pactada**: Cuota mensual pactada
-    - **creditos_sectorFinanciero**: Créditos en sector financiero
-    - **creditos_sectorCooperativo**: Créditos en cooperativas
-    - **creditos_sectorReal**: Créditos en sector real
-    - **promedio_ingresos_datacredito**: Ingresos promedio según DataCrédito
     """
     # Verificar que el modelo y preprocesador estén cargados
     if modelo is None or preprocessor is None:
@@ -192,7 +204,7 @@ def predict(cliente: ClienteInput):
         
         # Hacer predicción
         y_pred = modelo.predict(X_transformed)[0]
-        y_prob = modelo.predict_proba(X_transformed)[0][1]  # Probabilidad de Paga (clase 1)
+        y_prob = modelo.predict_proba(X_transformed)[0][1]
         
         # Determinar mensaje
         if y_pred == 1:
@@ -256,7 +268,7 @@ def predict_batch(clientes: ClienteInputBatch):
         )
 
 # ============================================
-# 7. EJECUCIÓN LOCAL (opcional)
+# 7. EJECUCIÓN LOCAL
 # ============================================
 
 if __name__ == "__main__":
