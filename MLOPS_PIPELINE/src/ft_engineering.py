@@ -1,5 +1,3 @@
-# mlops_pipeline/src/ft_engineering.py
-
 import pandas as pd
 import numpy as np
 import joblib
@@ -39,7 +37,7 @@ print(f"✅ Datos cargados: {df.shape[0]} filas x {df.shape[1]} columnas")
 
 
 # ============================================
-# 2. VARIABLES SEGURAS (SOLO PRE-PRÉSTAMO)
+# 2. VARIABLES SEGURAS
 # ============================================
 
 target = 'Pago_atiempo'

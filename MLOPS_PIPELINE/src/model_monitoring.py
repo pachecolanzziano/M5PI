@@ -1,5 +1,3 @@
-# src/model_monitoring.py
-
 import pandas as pd
 import numpy as np
 import joblib
@@ -333,7 +331,7 @@ if opcion == "📊 Resumen del Modelo":
     st.markdown("---")
     
     # ============================================
-    # DISTRIBUCIÓN DE CLASES (CORREGIDA)
+    # DISTRIBUCIÓN DE CLASES
     # ============================================
     
     st.subheader("📊 Distribución de Clases")

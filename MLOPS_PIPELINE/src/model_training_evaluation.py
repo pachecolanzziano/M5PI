@@ -1,5 +1,3 @@
-# mlops_pipeline/src/model_training_evaluation.py
-
 import pandas as pd
 import numpy as np
 import joblib
